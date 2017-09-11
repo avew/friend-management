@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by avew on 9/11/17.
  */
-public class Friends {
+public class FriendsDTO {
 
     @SerializedName("friends")
     @Expose

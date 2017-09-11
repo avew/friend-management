@@ -2,7 +2,7 @@ package id.aseprojali.social.rest;
 
 import id.aseprojali.social.domain.Account;
 import id.aseprojali.social.repository.AccountRepository;
-import id.aseprojali.social.rest.dto.Friends;
+import id.aseprojali.social.rest.dto.FriendsDTO;
 import id.aseprojali.social.rest.dto.MessageResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,15 +30,18 @@ public class FriendResource {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<?> hello(@RequestBody Friends friends) {
-        if (friends.getFriends() != null) {
+    public ResponseEntity<?> createAccounts(@RequestBody FriendsDTO friendsDTO) {
 
-            friends.getFriends().forEach(email -> {
-                log.debug("email %s", email);
+        if (friendsDTO.getFriends() != null) {
+
+            friendsDTO.getFriends().forEach(email -> {
+                log.debug("email " + email);
+
                 if (!accountRepository.findByEmail(email).isPresent()) {
-                    Account save = accountRepository.save(Account.builder().email(email).build());
-                    System.out.println("saved email  " + save.getEmail());
+                    Account accountSaved = accountRepository.save(Account.builder().email(email).build());
+                    log.debug("saved email " + accountSaved.getEmail());
                 }
+
             });
 
             MessageResponse success = MessageResponse.builder().status("success").build();
