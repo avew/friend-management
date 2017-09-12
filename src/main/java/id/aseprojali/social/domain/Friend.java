@@ -2,6 +2,7 @@ package id.aseprojali.social.domain;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -12,10 +13,11 @@ import java.util.List;
 /**
  * Created by avew on 9/11/17.
  */
+@EqualsAndHashCode(callSuper = true)
 @Document(collection = "friends")
 @Data
 @Builder
-public class Friend implements Serializable {
+public class Friend extends AbstractAuditingEntity implements Serializable {
 
     @Id
     private String email;
