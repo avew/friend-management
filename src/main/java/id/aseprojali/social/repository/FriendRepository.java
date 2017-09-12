@@ -7,5 +7,6 @@ import org.springframework.stereotype.Repository;
 /**
  * Created by avew on 9/12/17.
  */
+@Repository
 public interface FriendRepository extends MongoRepository<Friend, String>,FriendRepositoryCustom {
 }
