@@ -2,8 +2,8 @@ package id.aseprojali.social.service;
 
 import id.aseprojali.social.Constant;
 import id.aseprojali.social.domain.Friend;
-import id.aseprojali.social.domain.util.Util;
-import id.aseprojali.social.exception.FriendException;
+import id.aseprojali.social.util.Util;
+import id.aseprojali.social.exception.NotFoundException;
 import id.aseprojali.social.repository.FriendRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,49 +23,67 @@ public class FriendService {
     private FriendRepository friendRepository;
 
 
-    public Map<String, Object> createAccountAndAddConnections(List<String> friends) throws FriendException {
+    public Map<String, Object> createAccountAndAddConnections(List<String> friends) {
 
         Map<String, Object> map = new HashMap<>();
 
-        try {
 
-            friends.forEach(email -> {
+        friends.forEach(email -> {
 
-                int indexOf = friends.indexOf(email);
+            int indexOf = friends.indexOf(email);
 
-                int connection = indexOf == 0 ? 1 : 0;
+            int connection = indexOf == 0 ? 1 : 0;
 
-                Friend person = friendRepository.findOne(friends.get(indexOf));
+            Friend person = friendRepository.findOne(friends.get(indexOf));
 
-                if (person == null) {
-                    friendRepository.save(Friend.builder().email(friends.get(indexOf)).connections(Collections.singletonList(friends.get(connection))).build());
-                } else {
+            if (person == null) {
+                friendRepository.save(Friend.builder().email(friends.get(indexOf)).connections(Collections.singletonList(friends.get(connection))).build());
+            } else {
 
-                    if (person.getConnections().indexOf(friends.get(connection)) == -1) {
-                        person.getConnections().add(friends.get(connection));
-                    }
-
-                    person.setEmail(friends.get(indexOf));
+                if (person.getConnections().indexOf(friends.get(connection)) == -1) {
                     person.getConnections().add(friends.get(connection));
-                    friendRepository.save(person);
-
                 }
 
-            });
-            map.put(Constant.SUCCESS, true);
+                person.setEmail(friends.get(indexOf));
+                person.getConnections().add(friends.get(connection));
+                friendRepository.save(person);
 
-        } catch (Exception ex) {
-            throw new FriendException(ex.getMessage());
-        }
+            }
+
+        });
+        map.put(Constant.SUCCESS, true);
+
         return map;
     }
 
 
-    public Map<String, Object> retrieveFriends(String email) throws FriendException {
-
-        Friend friend = friendRepository.findOne(email);
+    /**
+     * 2. As a user, I need an API to retrieve the friends list for an email address.
+     * The API should receive the following JSON request:
+     * {
+     * <p>
+     * email: 'andy@example.com'
+     * }
+     * The API should return the following JSON response on success:
+     * {
+     * "success": true,
+     * "friends" :
+     * [
+     * 'john@example.com'
+     * ],
+     * "count" : 1
+     * }
+     * Please propose JSON responses for any errors that might occur.
+     *
+     * @param email string
+     * @return map
+     * @throws NotFoundException
+     */
+    public Map<String, Object> retrieveFriends(String email) throws NotFoundException {
 
         Map<String, Object> map = new HashMap<>();
+
+        Friend friend = friendRepository.findOne(email);
 
         if (friend != null) {
             map.put(Constant.SUCCESS, true);
@@ -73,13 +91,15 @@ public class FriendService {
             map.put(Constant.COUNT, friend.getConnections().size());
 
         } else {
-            throw new FriendException("Friend doesn't exist");
+            throw new NotFoundException("friend doesn't exist");
         }
+
         return map;
     }
 
 
     public Map<String, Object> retrieveCommonFriends(List<String> emails) {
+
         Map<String, Object> map = new HashMap<>();
 
         List<String> common = new ArrayList<>();
@@ -94,7 +114,6 @@ public class FriendService {
                     .collect(Collectors.toList())
                     .stream().collect(Collectors.groupingBy(email -> email, Collectors.counting())).entrySet()
                     .stream().filter(stringLongEntry -> stringLongEntry.getValue() > 1)
-
                     .map(Map.Entry::getKey)
                     .collect(Collectors.toList());
         }
@@ -109,7 +128,7 @@ public class FriendService {
     }
 
 
-    public Map<String, Object> addSubsciber(String requestor, String target) throws FriendException {
+    public Map<String, Object> addSubsciber(String requestor, String target) throws NotFoundException {
 
         Friend friend = friendRepository.findOne(target);
 
@@ -130,14 +149,14 @@ public class FriendService {
             map.put(Constant.SUCCESS, true);
 
         } else {
-            throw new FriendException("Friend doesn't exist");
+            throw new NotFoundException("Friend doesn't exist");
         }
 
         return map;
     }
 
 
-    public Map<String, Object> addBlockEmail(String requestor, String target) throws FriendException {
+    public Map<String, Object> addBlockEmail(String requestor, String target) throws NotFoundException {
         Friend friend = friendRepository.findOne(target);
 
         Map<String, Object> map = new HashMap<>();
@@ -157,13 +176,13 @@ public class FriendService {
             map.put(Constant.SUCCESS, true);
 
         } else {
-            throw new FriendException("Friend doesn't exist");
+            throw new NotFoundException("Friend doesn't exist");
         }
         return map;
     }
 
 
-    public Map<String, Object> retrieveAllEmailAddressThatCanReceiveUpdate(String sender, String text) throws FriendException {
+    public Map<String, Object> retrieveAllEmailAddressThatCanReceiveUpdate(String sender, String text) throws NotFoundException {
 
         Map<String, Object> map = new HashMap<>();
 
@@ -192,7 +211,7 @@ public class FriendService {
             map.put(Constant.RECIPIENTS, personCanReceiveUpdates);
 
         } else {
-            throw new FriendException("Friend doesn't exist");
+            throw new NotFoundException("Friend doesn't exist");
         }
 
         return map;

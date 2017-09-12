@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class RestExceptionHandler {
 
-    @ExceptionHandler(FriendException.class)
-    public ResponseEntity<ErrorResponse> exceptionToDoHandler(Exception ex) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> exceptionNotFound(Exception ex) {
         ErrorResponse error = new ErrorResponse();
         error.setCode(HttpStatus.NOT_FOUND.value());
         error.setMessage(ex.getMessage());
@@ -20,13 +20,22 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> exceptionHandler(Exception ex) {
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponse> exceptionBadRequest(Exception ex) {
         ErrorResponse error = new ErrorResponse();
         error.setCode(HttpStatus.BAD_REQUEST.value());
         error.setMessage(ex.getMessage());
         error.setStatus(Boolean.FALSE);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> exceptionHandler(Exception ex) {
+        ErrorResponse error = new ErrorResponse();
+        error.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        error.setMessage(ex.getMessage());
+        error.setStatus(Boolean.FALSE);
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

@@ -1,5 +1,8 @@
-package id.aseprojali.social.domain.util;
+package id.aseprojali.social.util;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,5 +19,9 @@ public class Util {
             return matcher.group(0);
         }
         return null;
+    }
+
+    public static String encodeValue(String value) throws UnsupportedEncodingException {
+        return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
     }
 }

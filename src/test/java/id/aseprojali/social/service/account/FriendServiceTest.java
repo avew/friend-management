@@ -3,9 +3,7 @@ package id.aseprojali.social.service.account;
 import id.aseprojali.social.Constant;
 import id.aseprojali.social.SocialMediaApplication;
 import id.aseprojali.social.domain.Friend;
-import id.aseprojali.social.domain.util.Util;
-import id.aseprojali.social.exception.FriendException;
-import id.aseprojali.social.repository.FriendRepository;
+import id.aseprojali.social.exception.NotFoundException;
 import id.aseprojali.social.service.FriendService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.*;
@@ -59,7 +57,7 @@ public class FriendServiceTest {
 
 
     @Test
-    public void bTestRetrieveFriend() throws FriendException {
+    public void bTestRetrieveFriend() throws NotFoundException {
 
         Map<String, Object> map = friendService.retrieveFriends(first);
 
@@ -72,7 +70,7 @@ public class FriendServiceTest {
     public void cTestRetrieveCommonFriendList() {
 
         Map<String, Object> map = friendService.retrieveCommonFriends(friends);
-        
+
         Assert.assertTrue((Boolean) map.get(Constant.SUCCESS));
 
 
@@ -80,7 +78,7 @@ public class FriendServiceTest {
 
 
     @Test
-    public void dTestAddSubsriber() throws FriendException {
+    public void dTestAddSubsriber() throws NotFoundException {
 
         String requestor = "lisa@example.com";
 
@@ -92,7 +90,7 @@ public class FriendServiceTest {
 
 
     @Test
-    public void eTestAddBlockEmail() throws FriendException {
+    public void eTestAddBlockEmail() throws NotFoundException {
 
         Map<String, Object> map = friendService.addBlockEmail(first, second);
 
@@ -102,7 +100,7 @@ public class FriendServiceTest {
 
 
     @Test
-    public void fTestRetrieveAllEmailAddressThatCanReceiveUpdate() throws FriendException {
+    public void fTestRetrieveAllEmailAddressThatCanReceiveUpdate() throws NotFoundException {
 
         String text = "Hello World! kate@example.com";
 
