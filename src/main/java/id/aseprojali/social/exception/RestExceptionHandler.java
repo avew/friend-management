@@ -16,7 +16,7 @@ public class RestExceptionHandler {
         ErrorResponse error = new ErrorResponse();
         error.setCode(HttpStatus.NOT_FOUND.value());
         error.setMessage(ex.getMessage());
-        error.setStatus(Boolean.FALSE);
+        error.setSuccess(Boolean.FALSE);
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
@@ -25,7 +25,7 @@ public class RestExceptionHandler {
         ErrorResponse error = new ErrorResponse();
         error.setCode(HttpStatus.BAD_REQUEST.value());
         error.setMessage(ex.getMessage());
-        error.setStatus(Boolean.FALSE);
+        error.setSuccess(Boolean.FALSE);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
@@ -34,7 +34,7 @@ public class RestExceptionHandler {
         ErrorResponse error = new ErrorResponse();
         error.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
         error.setMessage(ex.getMessage());
-        error.setStatus(Boolean.FALSE);
+        error.setSuccess(Boolean.FALSE);
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

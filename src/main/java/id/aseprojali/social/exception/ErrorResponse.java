@@ -7,7 +7,7 @@ public class ErrorResponse {
 
     private int code;
     private String message;
-    private boolean status;
+    private boolean success;
 
     public int getCode() {
         return code;
@@ -25,12 +25,12 @@ public class ErrorResponse {
         this.message = message;
     }
 
-    public boolean isStatus() {
-        return status;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class ErrorResponse {
         return "ErrorResponse{" +
                 "code=" + code +
                 ", message='" + message + '\'' +
-                ", status=" + status +
+                ", success=" + success +
                 '}';
     }
 }
