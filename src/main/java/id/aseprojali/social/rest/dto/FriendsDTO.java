@@ -23,4 +23,10 @@ public class FriendsDTO {
     }
 
 
+    @Override
+    public String toString() {
+        return "FriendsDTO{" +
+                "friends=" + friends +
+                '}';
+    }
 }

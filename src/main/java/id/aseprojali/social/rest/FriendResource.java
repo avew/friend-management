@@ -1,5 +1,6 @@
 package id.aseprojali.social.rest;
 
+import id.aseprojali.social.rest.dto.SubscriberDTO;
 import id.aseprojali.social.util.Util;
 import id.aseprojali.social.exception.NotFoundException;
 import id.aseprojali.social.exception.BadRequestException;
@@ -39,12 +40,10 @@ public class FriendResource {
                 throw new BadRequestException("please add 2 or more email");
             } else {
                 Map<String, Object> map = friendService.createAccountAndAddConnections(friends.getFriends());
-                return new ResponseEntity<>(map, HttpStatus.OK);
+                return new ResponseEntity<>(map, HttpStatus.CREATED);
             }
 
-        } else {
-            throw new BadRequestException("tag friends not found");
-        }
+        } else throw new BadRequestException("tag friends not found");
     }
 
     @RequestMapping(
@@ -57,6 +56,50 @@ public class FriendResource {
         log.debug("Request find email " + email);
         Map<String, Object> map = friendService.retrieveFriends(email);
         return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(
+            value = "/api/friends/common",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> postGetCommonFriend(@RequestBody FriendsDTO friends) throws BadRequestException {
+
+        if (friends.getFriends() != null) {
+
+            if (friends.getFriends().size() < 2) {
+
+                throw new BadRequestException("please add 2 or more email");
+
+            } else {
+
+                Map<String, Object> map = friendService.retrieveCommonFriends(friends.getFriends());
+
+                return new ResponseEntity<>(map, HttpStatus.OK);
+
+            }
+
+        } else throw new BadRequestException("tag friends not found");
+    }
+
+    @RequestMapping(
+            value = "/api/friend/subscribe",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> postAddSubsciber(@RequestBody SubscriberDTO subsciber) throws BadRequestException, NotFoundException {
+
+        if (subsciber != null) {
+
+            Map<String, Object> map = friendService.addSubsciber(subsciber.getRequestor(), subsciber.getTarget());
+
+            return new ResponseEntity<>(map, HttpStatus.OK);
+
+        } else throw new BadRequestException("check your body");
+
     }
 
 
