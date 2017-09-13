@@ -24,7 +24,7 @@
         <appender-ref ref="FILE"/>
     </appender>
 
-    <logger name="id.aseprojali.social" level="${logback.loglevel}"/>
+    <logger name="id.aseprojali.friendmanagement" level="${logback.loglevel}"/>
 
     <logger name="javax.activation" level="WARN"/>
     <logger name="javax.mail" level="WARN"/>
