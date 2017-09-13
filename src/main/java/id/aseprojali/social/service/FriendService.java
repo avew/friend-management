@@ -23,6 +23,25 @@ public class FriendService {
     private FriendRepository friendRepository;
 
 
+    /**
+     * 1. As a user, I need an API to create a friend connection between two email addresses.
+     * The API should receive the following JSON request:
+     * {
+     * friends:
+     * [
+     * 'andy@example.com',
+     * 'john@example.com'
+     * ]
+     * }
+     * The API should return the following JSON response on success:
+     * {
+     * "success": true
+     * }
+     * Please propose JSON responses for any errors that might occur.
+     *
+     * @param friends
+     * @return
+     */
     public Map<String, Object> createAccountAndAddConnections(List<String> friends) {
 
         Map<String, Object> map = new HashMap<>();
@@ -51,6 +70,7 @@ public class FriendService {
             }
 
         });
+
         map.put(Constant.SUCCESS, true);
 
         return map;
@@ -98,6 +118,31 @@ public class FriendService {
     }
 
 
+    /**
+     * 3. As a user, I need an API to retrieve the common friends list between two email
+     * addresses.
+     * The API should receive the following JSON request:
+     * {
+     * friends:
+     * [
+     * 'andy@example.com',
+     * 'john@example.com'
+     * ]
+     * }
+     * The API should return the following JSON response on success:
+     * {
+     * "success": true,
+     * "friends" :
+     * [
+     * 'common@example.com'
+     * ],
+     * "count" : 1
+     * }
+     * Please propose JSON responses for any errors that might occur.
+     *
+     * @param emails
+     * @return
+     */
     public Map<String, Object> retrieveCommonFriends(List<String> emails) {
 
         Map<String, Object> map = new HashMap<>();
@@ -128,11 +173,30 @@ public class FriendService {
     }
 
 
+    /**
+     * 4. As a user, I need an API to subscribe to updates from an email address.
+     * Please note that "subscribing to updates" is NOT equivalent to "adding a friend connection".
+     * The API should receive the following JSON request:
+     * {
+     * "requestor": "lisa@example.com",
+     * "target": "john@example.com"
+     * }
+     * The API should return the following JSON response on success:
+     * {
+     * "success": true
+     * }
+     * Please propose JSON responses for any errors that might occur.
+     *
+     * @param requestor
+     * @param target
+     * @return
+     * @throws NotFoundException
+     */
     public Map<String, Object> addSubsciber(String requestor, String target) throws NotFoundException {
 
-        Friend friend = friendRepository.findOne(target);
-
         Map<String, Object> map = new HashMap<>();
+
+        Friend friend = friendRepository.findOne(target);
 
         if (friend != null) {
 
@@ -156,10 +220,34 @@ public class FriendService {
     }
 
 
+    /**
+     * 5. As a user, I need an API to block updates from an email address.
+     * <p>
+     * Suppose "andy@example.com" blocks "john@example.com":
+     * • if they are connected as friends, then "andy" will no longer receive notifications from
+     * "john"
+     * • if they are not connected as friends, then no new friends connection can be added
+     * The API should receive the following JSON request:
+     * {
+     * "requestor": "andy@example.com",
+     * "target": "john@example.com"
+     * }
+     * The API should return the following JSON response on success:
+     * {
+     * "success": true
+     * }
+     * Please propose JSON responses for any errors that might occur.
+     *
+     * @param requestor
+     * @param target
+     * @return
+     * @throws NotFoundException
+     */
     public Map<String, Object> addBlockEmail(String requestor, String target) throws NotFoundException {
-        Friend friend = friendRepository.findOne(target);
 
         Map<String, Object> map = new HashMap<>();
+
+        Friend friend = friendRepository.findOne(target);
 
         if (friend != null) {
 
@@ -182,6 +270,36 @@ public class FriendService {
     }
 
 
+    /**
+     * 6. As a user, I need an API to retrieve all email addresses that can receive updates from an
+     * email address.
+     * Eligibility for receiving updates from i.e. "john@example.com":
+     * • has not blocked updates from "john@example.com", and
+     * • at least one of the following:
+     * o has a friend connection with "john@example.com"
+     * o has subscribed to updates from "john@example.com"
+     * o has been @mentioned in the update
+     * The API should receive the following JSON request:
+     * {
+     * "sender": "john@example.com",
+     * "text": "Hello World! kate@example.com"
+     * }
+     * The API should return the following JSON response on success:
+     * {
+     * "success": true
+     * "recipients":
+     * [
+     * "lisa@example.com",
+     * "kate@example.com"
+     * ]
+     * }
+     * Please propose JSON responses for any errors that might occur.
+     *
+     * @param sender
+     * @param text
+     * @return
+     * @throws NotFoundException
+     */
     public Map<String, Object> retrieveAllEmailAddressThatCanReceiveUpdate(String sender, String text) throws NotFoundException {
 
         Map<String, Object> map = new HashMap<>();

@@ -63,6 +63,9 @@ public class FriendServiceTest {
 
         Assert.assertTrue((Boolean) map.get(Constant.SUCCESS));
         Assert.assertEquals(map.get(Constant.COUNT), 1);
+
+        ArrayList<String> friends = (ArrayList<String>) map.get("friends");
+        Assert.assertEquals(friends.get(0), second);
     }
 
 
