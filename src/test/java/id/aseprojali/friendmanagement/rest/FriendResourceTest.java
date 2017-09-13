@@ -3,6 +3,7 @@ package id.aseprojali.friendmanagement.rest;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import id.aseprojali.friendmanagement.Constant;
+import id.aseprojali.friendmanagement.rest.dto.BlockedDTO;
 import id.aseprojali.friendmanagement.rest.dto.FriendsDTO;
 import id.aseprojali.friendmanagement.rest.dto.SubscriberDTO;
 import id.aseprojali.friendmanagement.service.FriendService;
@@ -136,7 +137,23 @@ public class FriendResourceTest {
     }
 
     @Test
-    public void eTestDeletePerson() {
+    public void eTestPostAddBlocked() throws Exception {
+        BlockedDTO bodyValid = new BlockedDTO();
+        bodyValid.setRequestor("andy@example.com");
+        bodyValid.setTarget("john@example.com");
+
+        given()
+                .body(bodyValid)
+                .contentType(ContentType.JSON)
+                .when()
+                .post("/api/friend/blocked")
+                .then()
+                .statusCode(200)
+                .body(Constant.SUCCESS, equalTo(true));
+    }
+
+    @Test
+    public void fTestDeletePerson() {
         friendService.deleteByEmail(first);
         friendService.deleteByEmail(second);
     }

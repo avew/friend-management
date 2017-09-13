@@ -1,5 +1,6 @@
 package id.aseprojali.friendmanagement.rest;
 
+import id.aseprojali.friendmanagement.rest.dto.BlockedDTO;
 import id.aseprojali.friendmanagement.rest.dto.SubscriberDTO;
 import id.aseprojali.friendmanagement.exception.NotFoundException;
 import id.aseprojali.friendmanagement.exception.BadRequestException;
@@ -42,7 +43,9 @@ public class FriendResource {
                 return new ResponseEntity<>(map, HttpStatus.CREATED);
             }
 
-        } else throw new BadRequestException("tag friends not found");
+        } else {
+            throw new BadRequestException("tag friends not found");
+        }
     }
 
     @RequestMapping(
@@ -80,7 +83,9 @@ public class FriendResource {
 
             }
 
-        } else throw new BadRequestException("tag friends not found");
+        } else {
+            throw new BadRequestException("tag friends not found");
+        }
     }
 
     @RequestMapping(
@@ -97,7 +102,29 @@ public class FriendResource {
 
             return new ResponseEntity<>(map, HttpStatus.OK);
 
-        } else throw new BadRequestException("check your body");
+        } else {
+            throw new BadRequestException("check your body");
+        }
+
+    }
+
+    @RequestMapping(
+            value = "/api/friend/blocked",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> postAddBlocked(@RequestBody BlockedDTO blocked) throws BadRequestException, NotFoundException {
+
+        if (blocked != null) {
+
+            Map<String, Object> map = friendService.addBlockEmail(blocked.getRequestor(), blocked.getTarget());
+
+            return new ResponseEntity<>(map, HttpStatus.OK);
+
+        } else {
+            throw new BadRequestException("check your body");
+        }
 
     }
 
