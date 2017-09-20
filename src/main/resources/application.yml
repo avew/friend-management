@@ -1,8 +1,9 @@
 spring:
   data:
     mongodb:
-      host: localhost
-      port: 27017
-      database: friends
+      uri: mongodb://localhost:27017
+      database: friend
+  application:
+    name: friend
 server:
-  port: 8082
+  port: 8080
