@@ -56,7 +56,12 @@ public class FriendService {
             Friend person = friendRepository.findOne(friends.get(indexOf));
 
             if (person == null) {
-                friendRepository.save(Friend.builder().email(friends.get(indexOf)).connections(Collections.singletonList(friends.get(connection))).build());
+                Friend friend = Friend.builder()
+                        .email(friends.get(indexOf))
+                        .connections(Collections.singletonList(friends.get(connection)))
+                        .build();
+
+                friendRepository.save(friend);
             } else {
 
                 if (person.getConnections().indexOf(friends.get(connection)) == -1) {

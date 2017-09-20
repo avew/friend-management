@@ -1,4 +1,4 @@
-package id.aseprojali.friendmanagement.service.account;
+package id.aseprojali.friendmanagement.service;
 
 import id.aseprojali.friendmanagement.Constant;
 import id.aseprojali.friendmanagement.FriendManagementApplication;
